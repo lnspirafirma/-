@@ -1,0 +1,196 @@
+import sys
+import time
+import getpass
+import uuid
+import json
+from datetime import datetime
+
+# การตั้งค่าสีสำหรับ Terminal (ANSI Escape Codes)
+class Colors:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+class AetheriumSystem:
+    def __init__(self):
+        # ข้อมูลองค์กร (Configuration)
+        self.org_data = {
+            "organization_name": "INSPIRAFIRMA",
+            "system_name": "Aetherium - Genesis AI",
+            "url": "aetherium.genesis.ai",
+            "admin": "@lnspirafirmagpk",
+            "contact_email": "lnspirafirma@gmail.com",
+            "org_id_display": "INSPIRAFIRMA",
+            "org_code_secret": "20D6570F-DFF7-4CCF-91A8",  # ใช้เป็น Master Key
+            "api_status": "ONLINE",
+            "subscription": "PRO (Le Chat Enabled)"
+        }
+        
+        # ฐานข้อมูลสมาชิกจำลอง
+        self.members = [
+            {"id": "MEM-001", "role": "Admin", "status": "Active"},
+            {"id": "MEM-002", "role": "Developer", "status": "Active"},
+            {"id": "MEM-003", "role": "Viewer", "status": "Inactive"}
+        ]
+
+        self.is_authenticated = False
+
+    def type_writer(self, text, speed=0.02, color=Colors.GREEN):
+        """ฟังก์ชันสำหรับพิมพ์ข้อความทีละตัวอักษรเพื่อความรู้สึกแบบ Hacker"""
+        sys.stdout.write(color)
+        for char in text:
+            sys.stdout.write(char)
+            sys.stdout.flush()
+            time.sleep(speed)
+        sys.stdout.write(Colors.ENDC + "\n")
+
+    def clear_screen(self):
+        print("\033[H\033[J", end="")
+
+    def banner(self):
+        self.clear_screen()
+        banner_art = f"""
+{Colors.CYAN}
+    _    _____ _____ _   _ _____ ____  ___ _   _ __  __ 
+   / \  | ____|_   _| | | | ____|  _ \|_ _| | | |  \/  |
+  / _ \ |  _|   | | | |_| |  _| | |_) || || | | | |\/| |
+ / ___ \| |___  | | |  _  | |___|  _ < | || |_| | |  | |
+/_/   \_\_____| |_| |_| |_|_____|_| \_\___|\___/|_|  |_|
+        GENESIS AI - SYSTEM V.2.0.4
+{Colors.ENDC}
+        """
+        print(banner_art)
+        print(f"{Colors.BOLD}Organization:{Colors.ENDC} {self.org_data['organization_name']}")
+        print(f"{Colors.BOLD}System Admin:{Colors.ENDC} {self.org_data['admin']}")
+        print("-" * 60)
+
+    def login(self):
+        """ระบบจำลองการล็อกอิน"""
+        self.banner()
+        self.type_writer("[SYSTEM] กำลังเริ่มต้นโปรโตคอลความปลอดภัย...", 0.03)
+        time.sleep(0.5)
+        
+        # รหัสผ่านจำลองคือ 'admin' หรือ รหัสองค์กร
+        while not self.is_authenticated:
+            user_input = input(f"{Colors.WARNING}[SECURITY] กรุณาระบุรหัสผ่านเข้าถึง (Password): {Colors.ENDC}")
+            
+            self.type_writer("กำลังตรวจสอบ...", 0.05)
+            
+            if user_input == "admin" or user_input == self.org_data['org_code_secret']:
+                self.type_writer("[ACCESS GRANTED] ยืนยันตัวตนสำเร็จ", 0.02, Colors.GREEN)
+                self.is_authenticated = True
+                time.sleep(1)
+            else:
+                self.type_writer("[ACCESS DENIED] รหัสผ่านไม่ถูกต้อง", 0.02, Colors.FAIL)
+
+    def view_info(self):
+        """ดูข้อมูลทั่วไปขององค์กร"""
+        self.banner()
+        print(f"{Colors.HEADER}--- ข้อมูลองค์กร (Organization Info) ---{Colors.ENDC}")
+        print(f"ชื่อองค์กร: {self.org_data['organization_name']}")
+        print(f"รหัสเรียกขาน: {self.org_data['org_id_display']}")
+        print(f"ผู้ดูแลระบบ: {self.org_data['admin']}")
+        print(f"อีเมลติดต่อ: {self.org_data['contact_email']}")
+        print(f"สถานะ API: {Colors.GREEN}{self.org_data['api_status']}{Colors.ENDC}")
+        input(f"\n{Colors.BLUE}[กด Enter เพื่อกลับ]{Colors.ENDC}")
+
+    def view_members(self):
+        """ดูรายชื่อสมาชิก"""
+        self.banner()
+        print(f"{Colors.HEADER}--- สมาชิกและการเข้าถึง (Members & Access) ---{Colors.ENDC}")
+        print(f"{'ID':<10} | {'Role':<15} | {'Status'}")
+        print("-" * 40)
+        for m in self.members:
+            status_color = Colors.GREEN if m['status'] == "Active" else Colors.FAIL
+            print(f"{m['id']:<10} | {m['role']:<15} | {status_color}{m['status']}{Colors.ENDC}")
+        
+        print("-" * 40)
+        input(f"\n{Colors.BLUE}[กด Enter เพื่อกลับ]{Colors.ENDC}")
+
+    def danger_zone(self):
+        """เขตอันตราย - ต้องใช้รหัสลับองค์กร"""
+        self.banner()
+        print(f"{Colors.FAIL}{Colors.BOLD}!!! DANGER ZONE / เขตอันตราย !!!{Colors.ENDC}")
+        print("พื้นที่นี้เก็บความลับระดับสูงสุดขององค์กร")
+        
+        secret_code = input(f"กรุณาระบุรหัสองค์กร (UUID) เพื่อปลดล็อก: ")
+        
+        if secret_code.strip() == self.org_data['org_code_secret']:
+            self.type_writer("UUID MATCHED. DECRYPTING SECRETS...", 0.05, Colors.WARNING)
+            time.sleep(1)
+            print("\n" + "="*50)
+            print(f"{Colors.HEADER}ความลับองค์กร (ORGANIZATION SECRETS){Colors.ENDC}")
+            print("="*50)
+            print(f"CORE ID: {self.org_data['org_code_secret']}")
+            print(f"Root Access Email: {self.org_data['contact_email']}")
+            print(f"AI Model: Genesis-01 (Le Chat Protocol)")
+            print(f"Server Location: [REDACTED]")
+            print("="*50)
+            
+            # จำลองฟีเจอร์ลบข้อมูล
+            choice = input(f"\n{Colors.FAIL}[!] ต้องการล้างค่า API Key หรือไม่? (y/n): {Colors.ENDC}")
+            if choice.lower() == 'y':
+                self.type_writer("กำลังล้างข้อมูล...", 0.1, Colors.FAIL)
+                time.sleep(1)
+                print("System Reset Complete.")
+        else:
+            self.type_writer("[FATAL ERROR] รหัสองค์กรไม่ถูกต้อง ระบบกำลังล็อก...", 0.05, Colors.FAIL)
+            time.sleep(1)
+
+        input(f"\n{Colors.BLUE}[กด Enter เพื่อกลับ]{Colors.ENDC}")
+
+    def main_menu(self):
+        while True:
+            self.banner()
+            print(f"{Colors.BOLD}เมนูหลัก (Main Menu):{Colors.ENDC}")
+            print("1. ข้อมูลองค์กร (Organization)")
+            print("2. จัดการสมาชิก (Members & Access)")
+            print("3. การสมัครสมาชิก (Subscription & Le Chat)")
+            print("4. สถานะ API และการใช้งาน (API & Usage)")
+            print("5. ความเป็นส่วนตัว (Privacy)")
+            print(f"{Colors.FAIL}6. เขตอันตราย / ความลับ (Danger Zone){Colors.ENDC}")
+            print("0. ออกจากระบบ (Exit)")
+            
+            choice = input(f"\n{Colors.GREEN}เลือกคำสั่ง > {Colors.ENDC}")
+            
+            if choice == '1':
+                self.view_info()
+            elif choice == '2':
+                self.view_members()
+            elif choice == '3':
+                self.banner()
+                print("สถานะ: Subscription Active")
+                print("Service: Le Chat [Enabled]")
+                input("\n[Enter]")
+            elif choice == '4':
+                self.banner()
+                print("API Usage: 45,230 / 100,000 requests")
+                print("Latency: 24ms")
+                input("\n[Enter]")
+            elif choice == '5':
+                self.banner()
+                print("Privacy Policy: Standard Encryption AES-256")
+                print("Admin Contact: lnspirafirma@gmail.com")
+                input("\n[Enter]")
+            elif choice == '6':
+                self.danger_zone()
+            elif choice == '0':
+                self.type_writer("กำลังปิดการเชื่อมต่อ... Aetherium Offline.", 0.03)
+                break
+            else:
+                pass
+
+if __name__ == "__main__":
+    try:
+        system = AetheriumSystem()
+        system.login()
+        if system.is_authenticated:
+            system.main_menu()
+    except KeyboardInterrupt:
+        print(f"\n{Colors.FAIL}ตรวจพบการบังคับหยุดทำงาน (Force Quit){Colors.ENDC}")
