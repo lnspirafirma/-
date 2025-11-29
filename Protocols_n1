@@ -1,0 +1,11 @@
+Record/Importance/Aetherium
+·
+main
+…Command Line Interface (CLI) ที่ถูกออกแบบมาเพื่อความปลอดภัยสูงสุด รองรับการเชื่อมต่อกับ Genesis AI และ Le Chat Protocol
+🔐 Security Protocols
+print("="*50)
+            print(f"CORE ID: {self.org_data['org_code_secret']}")
+            print(f"Root Access Email: {self.org_data['contact_email']}")
+            print(f"AI Model: Genesis-01 (Le Chat Protocol)")
+            print(f"Server Location: [REDACTED]")
+            print("="*50)
